@@ -1,0 +1,25 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /hakatonDemo
+
+spring:
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
+    datasource:
+      driver-class-name: org.postgresql.Driver
+    application:
+      name: hakatonDemo
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: hakaton_user
+    password: hakatonuserpassword
+    url: jdbc:postgresql://api-b2b-dev.licard.com/hakatondb
+rabbit:
+  host: api-b2b-dev.licard.com
+  port: 5673
