@@ -26,8 +26,8 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Queue hakatonDemoQueue() {
-        return QueueBuilder.durable("hakatonDemoQueue")
+    public Queue hackathonDemoQueue() {
+        return QueueBuilder.durable("hackathonDemoQueue")
                 .build();
     }
 
@@ -49,7 +49,9 @@ public class RabbitConfig {
         rabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.AUTO);
         rabbitListenerContainerFactory.setConcurrentConsumers(25);
         rabbitListenerContainerFactory.setMaxConcurrentConsumers(50);
+//        rabbitListenerContainerFactory.setBatchSize(1);
         rabbitListenerContainerFactory.setPrefetchCount(2);
+        rabbitListenerContainerFactory.setConsumerBatchEnabled(false);
         rabbitListenerContainerFactory.setDefaultRequeueRejected(false);
         return rabbitListenerContainerFactory;
     }
