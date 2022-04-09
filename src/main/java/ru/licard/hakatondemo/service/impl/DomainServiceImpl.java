@@ -20,20 +20,23 @@ public class DomainServiceImpl implements DomainService {
 
     private final HakatonEntityRepository hakatonEntityRepository;
 
-    // этот обработчик проверяет что записи с таким ID в БД нет,
+    // этот метод проверяет что записи с таким ID в БД нет,
     // после чего записывает новую запись
 
     // т. к. Spring параллелит процессы самостоятельно,
     // а проверка и запись производятся двумя разными вызовами,
-    // получается конкурентность, на момент проверки записи в БД нет
-    // а на момент попытки записать уже появилась
+    // получается конкурентность (race condition), на момент проверки
+    // записи в БД нет, а на момент попытки записать уже появилась
 
-    // я решил задачу по тупому, запретив параллельное выполнение
-    // этого метода словом synchronized,
-    // потому что у меня не работают транзакции
-    
+    // я завернул каждый вызов этого метода
+    // в транзакцию уровня REPEATABLE READ,
+    // таким образом конкурентность устранена
+    // и результаты проверки остаются актуальными
+    // на момент записи
+
     @Override
-    public synchronized void saveHakatonEntity(SendingDto sendingDto) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+    public void saveHakatonEntity(SendingDto sendingDto) {
         if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())) {
             System.out.println(sendingDto.getName() + hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName()));
             hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
