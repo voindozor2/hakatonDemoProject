@@ -14,9 +14,9 @@ public class DomainServiceImpl implements DomainService {
     private final HakatonEntityRepository hakatonEntityRepository;
 
     @Override
-    public void saveHakatonEntity(SendingDto sendingDto) {
-        if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){
-            hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
+    public void saveHakatonEntity(SendingDto sendingDto) {                                  // этот обработчик должен проверять, есть ли такая запись в БД,
+        if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){       // и класть, только если ее нет
+            hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));          // но почему-то он этого не делает
         }
     }
 }

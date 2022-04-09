@@ -24,7 +24,7 @@ public class SenderServiceImpl implements SenderService {
         String name = DigestUtils.md5DigestAsHex(array);
 
         for (int i = 0; i < 80; i++) {
-            rabbitTemplate.convertAndSend("hakatonDemoQueue",name);
+            rabbitTemplate.convertAndSend("hakatonDemoQueue",name);     // вот этот сендер отправляет одинаковые сообщения
         }
     }
 }
