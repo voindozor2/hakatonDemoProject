@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.licard.hakatondemo.data.HakatonEntityRepository;
 import ru.licard.hakatondemo.domain.HakatonEntity;
 import ru.licard.hakatondemo.dto.SendingDto;
@@ -38,7 +37,6 @@ public class DomainServiceImpl implements DomainService {
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
     public void saveHakatonEntity(SendingDto sendingDto) {
         if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())) {
-            System.out.println(sendingDto.getName() + hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName()));
             hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
         }
     }

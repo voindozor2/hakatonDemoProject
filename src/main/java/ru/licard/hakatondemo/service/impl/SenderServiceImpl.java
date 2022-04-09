@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import ru.licard.hakatondemo.dto.SendingDto;
 import ru.licard.hakatondemo.service.SenderService;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 @Service
