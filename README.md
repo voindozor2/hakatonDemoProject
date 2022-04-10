@@ -6,7 +6,7 @@
 + ### Ерхов Вадим Олегович ([V4D1MECHE](https://github.com/V4D1MECHE)) (капитан)
 + ### Гунин Игорь Павлович ([notblank00](https://github.com/notblank00))
 + ### Касьяник Артемий Иванович ([Artemidividiy](https://github.com/Artemidividiy))
-+ ### Ларшина Мария Андреевна
++ ### Ларшина Мария Андреевна ([larmari](https://github.com/larmari))
 
 ---
 
