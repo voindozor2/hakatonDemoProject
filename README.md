@@ -9,7 +9,7 @@
 
 ---
 
-## Причина ошибки:
+## Причина ошибки :interrobang::
 При запуске программы происходит вызов метода `SenderService.sendTestMessages()`, который отправляет в очередь 80 сообщений с одинаковым полем `name`:
 ```java
 public void sendTestMessages() throws JsonProcessingException {
