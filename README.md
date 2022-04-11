@@ -71,7 +71,7 @@ org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique co
 
 ---
 ## Вывод
-Нами были рассмотрены еще 1 возможный варианта решения:
+Нами был рассмотрен еще 1 возможный варианта решения:
 
 :shipit: Синхронизация
 ```Java
