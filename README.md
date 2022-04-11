@@ -24,6 +24,7 @@ public void sendTestMessages() throws JsonProcessingException {
 ```
 
 Сообщения, которые выходят из очереди обрабатываются методом 
+
 `AmqpListener.hakatonDemoQueue(String message)`:
 
 ```java
