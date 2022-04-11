@@ -81,7 +81,7 @@ org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique co
         }
     }
 ```
-Однако,Мы нашли более оптимальное решение - описанное [выше](#anchor1).
+Однако, мы нашли более оптимальное решение - описанное [выше](#anchor1).
 
 
 
