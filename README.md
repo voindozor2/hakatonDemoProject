@@ -46,9 +46,9 @@ private String name;
 @Override
 public void saveHakatonEntity(SendingDto sendingDto){
         if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){
-        hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
+            hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
         }
-        }
+}
 ```
 
 Однако:scream_cat:, вследствие **параллельного выполнения нескольких аналогичных процессов**, при добавлении одинаковых записей, возникает ситуация **конкурентного доступа** (race condition): между проверкой отсутствия объекта и записью нового объекта в параллельном потоке происходит запись объекта с таким же идентификатором, что приводит к аномалии **фантомного чтения** (phantom read). Таким образом во время проверки конфликтующей строки в таблице нет, поэтому далее происходит попытка добавления строки, но в момент добавления строка с таким идентификатором уже существует в таблице. Это приводит к выбрасыванию ошибки:no_entry::
@@ -65,7 +65,6 @@ org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique co
     @Transactional
     @Query(value = "insert into hakaton_entity (name) values (?) ON CONFLICT DO NOTHING", nativeQuery = true)
     void createHakatonEntityIfNotExists(String name);
-}
 ```
 
 Мы шаблонизируем запрос к БД через аннотацию `@Query`,используя чистый SQL(nativeQuery= true) для
@@ -73,13 +72,22 @@ org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique co
 функционала `@Query`, добавляя возможность использования команд `INSERT,UPDATE,DELETE`. Аннотация `@Transactional`
 оборачивает наш процесс в отдельную транзакцию, если такой не существовало ранее. Так же мы убрали предварительный
 запрос на существование объекта в бд, чтобы сократить количество запросов и снизить нагрузку на сеть.
+
+В итоге метод `DomainServiceImpl.saveHakatonEntity(...)` имеет такой вид:
+```Java
+    @Override
+    public void saveHakatonEntity(SendingDto sendingDto) {
+        hakatonEntityRepository.createHakatonEntityIfNotExists(sendingDto.getName());
+    }
+```
+
 ---
 ## Вывод
 Нами был рассмотрен еще 1 возможный варианта решения:
 
 :shipit: Синхронизация
 ```Java
-@Override
+    @Override
     public synchronized void saveHakatonEntity(SendingDto sendingDto) {
         if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){
             hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
