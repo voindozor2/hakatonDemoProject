@@ -40,14 +40,15 @@ private void hakatonDemoQueue(String message)
 private String name;
 ```
 
- Метод `DomainService.createHakatonEntityIfNotExists(...)` добавляет наш объект в БД, если таких не было ранее.
+Метод `DomainService.saveHakatonEntity(...)` добавляет наш объект в БД, если таких не было ранее.
 
 ```Java
- @Override
-    public void saveHakatonEntity(SendingDto sendingDto) {
-        hakatonEntityRepository.createHakatonEntityIfNotExists(sendingDto.getName());
-    }
-}
+@Override
+public void saveHakatonEntity(SendingDto sendingDto){
+        if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){
+        hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
+        }
+        }
 ```
 
 Однако:scream_cat:, вследствие **параллельного выполнения нескольких аналогичных процессов**, при добавлении одинаковых записей, возникает ситуация **конкурентного доступа** (race condition): между проверкой отсутствия объекта и записью нового объекта в параллельном потоке происходит запись объекта с таким же идентификатором, что приводит к аномалии **фантомного чтения** (phantom read). Таким образом во время проверки конфликтующей строки в таблице нет, поэтому далее происходит попытка добавления строки, но в момент добавления строка с таким идентификатором уже существует в таблице. Это приводит к выбрасыванию ошибки:no_entry::
@@ -66,9 +67,12 @@ org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique co
     void createHakatonEntityIfNotExists(String name);
 }
 ```
-Мы  шаблонизируем запрос к БД через аннотацию `@Query`,используя чистый SQL(nativeQuery= true) для использования `insert and ON CONFLICT DO NOTHING`.
-Аннотация `@Modifying` используется для расширения функционала `@Query`, добавляя возможность использования команд `INSERT,UPDATE,DELETE`. Аннотация `@Transactional` оборачивает наш процесс в отдельную транзакцию, если такой не существовало ранее.
 
+Мы шаблонизируем запрос к БД через аннотацию `@Query`,используя чистый SQL(nativeQuery= true) для
+использования `insert and ON CONFLICT DO NOTHING`. Аннотация `@Modifying` используется для расширения
+функционала `@Query`, добавляя возможность использования команд `INSERT,UPDATE,DELETE`. Аннотация `@Transactional`
+оборачивает наш процесс в отдельную транзакцию, если такой не существовало ранее. Так же мы убрали предварительный
+запрос на существование объекта в бд, чтобы сократить количество запросов и снизить нагрузку на сеть.
 ---
 ## Вывод
 Нами был рассмотрен еще 1 возможный варианта решения:

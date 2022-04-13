@@ -17,9 +17,9 @@ spring:
       name: hakatonDemo
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: chaos
-    password: chaos
-    url: jdbc:postgresql://127.0.0.1:5432/hackatondb
+    username: hakaton_user
+    password: hakatonuserpassword
+    url: jdbc:postgresql://194.87.101.83:5432/hakatondb
 rabbit:
-  host: 127.0.0.1
+  host: 194.87.101.83
   port: 5672
