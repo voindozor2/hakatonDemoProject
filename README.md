@@ -56,7 +56,7 @@ private void hackathonDemoQueue(String message) {
 
 ```java
 @Override
-public synchronized void saveHackathonEntity(SendingDto sendingDto) {
+public void saveHackathonEntity(SendingDto sendingDto) {
     if (!hackathonEntityRepository.existsHackathonEntityByName(sendingDto.getName())) {
         hackathonEntityRepository.save(new HackathonEntity(sendingDto.getName()));
     }
@@ -114,14 +114,12 @@ public void saveHackathonEntity(SendingDto sendingDto) {
 ---
 
 ## **Исправление**
+
 Исправить данную ошибку можно путем синхронизации потоков в момент
 вызова функции записи так, чтобы не возникало параллельных
 вызовов. Для этого стоит использовать ключевое слово
 `synchronized`, позволяющее выполнять функцию, к которой
 оно применено, в одном потоке.
-
-Так же можно уменьшить количество приемников до одного, но
-этот вариант не так хорош как первый.
 
 ---
 
@@ -146,6 +144,12 @@ public void saveHackathonEntity(SendingDto sendingDto) {
 плохи, так как вызывают лишние запросы, а кроме того противоречат нашей
 постановке задачи: код внутри `if` срабатывает не один раз, что вызовет
 проблемы при дальнейшей разработке.
+
+### **Уменьшение количества приемников**
+
+Убавив количества приемников до 1 можно избавиться от параллельных
+вызовов функций, однако и скорость приложения при этом значительно
+уменьшится.
 
 ---
 
