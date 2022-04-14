@@ -8,11 +8,11 @@ import ru.licard.hakatondemo.service.SenderService;
 
 @SpringBootApplication
 @RequiredArgsConstructor
-public class HakatonDemoApplication implements CommandLineRunner {
+public class HackathonDemoApplication implements CommandLineRunner {
     private final SenderService senderService;
 
     public static void main(String[] args) {
-        SpringApplication.run(HakatonDemoApplication.class, args);
+        SpringApplication.run(HackathonDemoApplication.class, args);
     }
 
     @Override

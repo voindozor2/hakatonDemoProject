@@ -1,0 +1,36 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - postgres
+    restart: unless-stopped
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: PotatoHD
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: java
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+    
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:

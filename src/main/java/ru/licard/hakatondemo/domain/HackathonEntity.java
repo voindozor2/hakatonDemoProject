@@ -3,15 +3,16 @@ package ru.licard.hakatondemo.domain;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "hakaton_entity")
+@Table(name = "hackathon_entity")
 @AllArgsConstructor
 @NoArgsConstructor
-public class HakatonEntity {
+public class HackathonEntity {
+
+
     @Id
     private String name;
+
 }
