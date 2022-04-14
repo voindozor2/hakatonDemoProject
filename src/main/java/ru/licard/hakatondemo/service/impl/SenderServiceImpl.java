@@ -16,7 +16,7 @@ public class SenderServiceImpl implements SenderService {
     private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public synchronized void sendTestMessages() throws JsonProcessingException {
+    public void sendTestMessages() throws JsonProcessingException {
         byte[] array = new byte[14];
         new Random(System.nanoTime()).nextBytes(array);
 
