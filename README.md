@@ -20,8 +20,10 @@ unique constraint.
 
 # Исправение 
 Одним из решений ошибки является синхронизация потоков, чтобы запросы не параллелились. Для этого нужно добавить ключевое слово synchronized в файле DomainServiceLmpl.java следующим образом
-`public *synchronized* void saveHakatonEntity(SendingDto sendingDto) {
+```
+public *synchronized* void saveHakatonEntity(SendingDto sendingDto) {
     if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){
         hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
     }
-}`
+}
+```
