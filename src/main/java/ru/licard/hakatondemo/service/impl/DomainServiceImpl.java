@@ -14,7 +14,7 @@ public class DomainServiceImpl implements DomainService {
     private final HakatonEntityRepository hakatonEntityRepository;
 
     @Override
-    public void saveHakatonEntity(SendingDto sendingDto) {
+    synchronized public void saveHakatonEntity(SendingDto sendingDto) {
         if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())){
             hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
         }
