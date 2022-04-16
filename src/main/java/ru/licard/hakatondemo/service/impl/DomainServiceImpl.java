@@ -2,6 +2,9 @@ package ru.licard.hakatondemo.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
@@ -15,6 +18,7 @@ import ru.licard.hakatondemo.service.DomainService;
 @Service
 @RequiredArgsConstructor
 @EnableTransactionManagement
+@EnableRetry
 public class DomainServiceImpl implements DomainService {
 
     private final HakatonEntityRepository hakatonEntityRepository;
@@ -28,13 +32,16 @@ public class DomainServiceImpl implements DomainService {
     // записи в БД нет, а на момент попытки записать уже появилась
 
     // я завернул каждый вызов этого метода
-    // в транзакцию уровня REPEATABLE READ,
+    // в транзакцию уровня SERIALIZABLE,
     // таким образом конкурентность устранена
     // и результаты проверки остаются актуальными
     // на момент записи
 
+    // при ошибке сериализации запускаем метод заново
+
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+    @Retryable(value = CannotAcquireLockException.class) // если не удалось начать транзакцию, пробуем еще раз
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public void saveHakatonEntity(SendingDto sendingDto) {
         if(!hakatonEntityRepository.existsHakatonEntityByName(sendingDto.getName())) {
             hakatonEntityRepository.save(new HakatonEntity(sendingDto.getName()));
